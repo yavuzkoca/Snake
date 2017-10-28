@@ -12,11 +12,11 @@ YELLOW = (255, 255, 0)
 BackGroundColor = (140, 0, 50)
 
 gameDisplay = pygame.display.set_mode(window)  # Name of the main screen
-pygame.display.set_caption('Slither')  # Title of the game
+pygame.display.set_caption('Snake')  # Title of the game
 
 clock = pygame.time.Clock()
 FPS = 30
-block_size = 10
+block_size = 20
 
 
 def snake(block_size, snakeList):
@@ -46,7 +46,7 @@ def gameLoop():
     highScore = str(file.read())
     file.close()
 
-    speed = block_size
+    speed = 10
     lead_x = window[0] / 2
     lead_y = window[1] / 2
     lead_x_change = 0
@@ -55,7 +55,7 @@ def gameLoop():
     snakeList = []
     snakeLength = 1
 
-    AppleThickness = 30
+    AppleThickness = 20
 
     randAppleX = round(random.randrange(0, window[0]-AppleThickness))  # / float(block_size))*float(block_size)
     randAppleY = round(random.randrange(0, window[1]-AppleThickness))  # / float(block_size))*float(block_size)
@@ -113,15 +113,22 @@ def gameLoop():
         # gameDisplay.fill(RED, rect=[200, 200, 50, 50])
         pygame.display.update()
 
-        if randAppleX <= lead_x <= randAppleX + AppleThickness:
-            if randAppleY <= lead_y <= randAppleY + AppleThickness:
-                randAppleX = round(random.randrange(0, window[0] - AppleThickness))  # / float(block_siz))*float(block_size)
-                randAppleY = round(random.randrange(0, window[1] - AppleThickness))  # / float(block_siz))*float(block_size)
+        # if randAppleX - block_size <= lead_x <= randAppleX + AppleThickness:
+        #     if randAppleY - block_size <= lead_y <= randAppleY + AppleThickness:
+        #         randAppleX = round(random.randrange(0, window[0] - AppleThickness))  # / float(block_siz))*float(block_size)
+        #         randAppleY = round(random.randrange(0, window[1] - AppleThickness))  # / float(block_siz))*float(block_size)
+        #         score += 10
+        #         snakeLength += 1
+
+        if randAppleX <= lead_x <= randAppleX + AppleThickness or randAppleX + AppleThickness > lead_x + block_size > randAppleX:
+            if randAppleY <= lead_y <= randAppleY + AppleThickness or randAppleY + AppleThickness > lead_y + block_size > randAppleY:
+                randAppleX = round(random.randrange(0, window[0] - AppleThickness))
+                randAppleY = round(random.randrange(0, window[1] - AppleThickness))
                 score += 10
                 snakeLength += 1
 
         clock.tick(FPS)
-
+        
         while gameOver:
             gameDisplay.fill(WHITE)
             message_to_screen("Game Over! Press C to play again or Q to quit", RED, 40, window[0] / 6, window[1] / 6)
@@ -138,7 +145,6 @@ def gameLoop():
                         gameOver = False
                     elif event.key == pygame.K_c:
                         gameLoop()
-
 
     pygame.quit()
     quit()
